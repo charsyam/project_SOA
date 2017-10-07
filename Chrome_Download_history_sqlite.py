@@ -1,7 +1,13 @@
+#-*- coding:utf-8 -*-
+
 import csv
 import os
 import sqlite3 as sql
 import datetime
+import socket
+import getpass
+from subprocess import check_output
+from xml.etree.ElementTree import fromstring
 
 def getFiletime(dtms):
 	if(dtms == 0):
@@ -9,23 +15,23 @@ def getFiletime(dtms):
 	else:
 		seconds, micros = divmod(dtms, 1000000)
 		days, seconds = divmod(seconds, 86400)
-		return str(datetime.datetime(1601, 1, 1) + (datetime.timedelta(days, seconds, micros)))
+		return str(datetime.datetime(1601, 1, 1) + (datetime.timedelta(days, seconds, micros, hours =+ 9)))
 
 def State(state):
 	if(state == 0):
-		msg = str(('Download in progress'))
+		msg = (('Download in progress'))
 		return msg
 	elif(state == 1):
-		msg = str(('Download completed'))
+		msg = (('Download completed'))
 		return msg
 	elif(state == 2):
-		msg = str(('Download cancelled'))
+		msg = (('Download cancelled'))
 		return msg
 	elif(state == 3):
-		msg = str(('Download interrupted'))
+		msg = (('Download interrupted'))
 		return msg
 	elif(state == 4):
-		msg = str(('Maximum download state reached'))
+		msg = (('Maximum download state reached'))
 		return msg
 
 def Danger_Type(danger):
@@ -130,24 +136,91 @@ def Interrupt_Reason(reason):
 	elif(reason == 50):
 		msg = str(('Browser crashed (internal only)'))
 		return msg
-userhome = os.path.expanduser('~')          
 
-# USER_NAME = os.path.split(userhome)[-1]  
+def get_IP():
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	s.connect(("8.8.8.8", 80))
+	ip = (s.getsockname()[0])
+	s.close()
+	return ip
 
-conn = sql.connect(r"C:\Users\gayou\AppData\Local\Google\Chrome\User Data\Default\History")
+def getMac() :
+
+    cmd = 'wmic.exe nicconfig where "IPEnabled  = True" get MACAddress /format:rawxml'
+    xml_text = check_output(cmd)
+    xml_root = fromstring(xml_text)
+
+    nics = []
+    keyslookup = {
+        'MACAddress' : 'mac',
+    }
+
+    for nic in xml_root.findall("./RESULTS/CIM/INSTANCE") :
+        n = {'mac':'',}
+
+        for prop in nic :
+            name = keyslookup[prop.attrib['NAME']]
+            if prop.tag == 'PROPERTY':
+                if len(prop):
+                    for v in prop:
+                        n[name] = v.text
+        nics.append(n)
+
+    return nics    
+
+
+f1 = open('E:\chrome_downloads_info.txt', 'w+', encoding='utf8')
+
+data_path = os.path.expanduser('~') + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
+files = os.listdir(data_path)
+history_db = os.path.join(data_path, 'history')
+
+conn = sql.connect(history_db)
+
+# conn = sql.connect(r"C:\Users\gayou\AppData\Local\Google\Chrome\User Data\Default\History")
 cur = conn.cursor()
 cur.execute("SELECT * FROM downloads")
 
+nics = getMac()
+for nic in nics :
+	for k, v in nic.items() :
+	    MAC = v
+	    MAC2 = MAC.replace(':', '-')
+
 rows = cur.fetchall()
 for num,row in enumerate(rows):
-	print ('Downloads list [' + str(num + 1) + ']' + '\n''GUID ' +  ': ' + (row[1]) 
-		+ '\n' + 'Current_Path: ' + (row[2]) + '\n' + 'Target_Path: ' + (row[3])
-		+ '\n' + 'Start_Download_Time: ' + getFiletime((row[4])) + '\n' + 'Recieved_Bytes: ' + str(row[5]) + ' Bytes'
-		+ '\n' + 'Total_Bytes: ' + str(row[6]) + ' Bytes' + '\n' + 'State: ' + State((row[7]))
-		+ '\n' + 'Danger_Type: ' + Danger_Type(row[8]) + '\n' + 'Interrupt_Reason: ' + str(Interrupt_Reason((row[9])))
-		+ '\n' + 'URL: ' , (row[15]) + '\n' + 'Site_lastmodified_Time: ' + (row[23])
-		+ '\n' + 'File_Type: ' + (row[24]))
-	print ('-------------------------------------------------------------------------------------')
-conn.close()
+	print (socket.gethostname() + ' | ' + str(get_IP()) + ' | ' + (MAC2) + ' | ' + getpass.getuser() + ' | ' + (row[1]) + ' | ' + (row[2])
+	 + ' | ' + (row[3]) + ' | ' + getFiletime((row[4])) + ' | ' + str(row[5]) + ' | ' + str(row[6]) + ' | ' + State((row[7])) + ' | ' + Danger_Type(row[8])
+	 + ' | ' + str(Interrupt_Reason((row[9]))) + ' | ' + (row[15]) + ' | ' + (row[23]) + ' | ' + str(row[24]))
+	f1.write(socket.gethostname() + ' | ' + str(get_IP()) + ' | ' + (MAC2) + ' | ' + getpass.getuser() + ' | ' + (row[1]) + ' | ' + (row[2])
+	 + ' | ' + (row[3]) + ' | ' + getFiletime((row[4])) + ' | ' + str(row[5]) + ' | ' + str(row[6]) + ' | ' + State((row[7])) + ' | ' + Danger_Type(row[8])
+	 + ' | ' + str(Interrupt_Reason((row[9]))) + ' | ' + (row[15]) + ' | ' + (row[23]) + ' | ' + str(row[24]))
+	f1.write('\n')
 
-#username 변경 가능하게 해야함.
+		# 'Downloads list [' + str(num + 1) + ']' + '\n' + 'GUID ' +  ': ' + (row[1]) 
+		# + '\n' + 'Current_Path: ' + (row[2]) + '\n' + 'Target_Path: ' + (row[3])
+		# + '\n' + 'Start_Download_Time: ' + getFiletime((row[4])) + '\n' + 'Recieved_Bytes: ' + str(row[5]) + ' Bytes'
+		# + '\n' + 'Total_Bytes: ' + str(row[6]) + ' Bytes' + '\n' + 'State: ' + State((row[7]))
+		# + '\n' + 'Danger_Type: ' + Danger_Type(row[8]) + '\n' + 'Interrupt_Reason: ' + str(Interrupt_Reason((row[9])))
+		# + '\n' + 'URL: ' + (row[15]) + '\n' + 'Site_lastmodified_Time: ' + (row[23])
+		# + '\n' + 'File_Type: ' + str(row[24]))
+	#print ('---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------')
+
+
+# 	Downloads_list = ('Downloads list [' + str(num + 1) + ']')
+# 	GUID = ('GUID ' +  ': ' + (row[1]))
+# 	Current_Path = ('Current_Path: ' + (row[2]))
+# 	Target_Path = ((row[3]))
+# 	Start_Download_Time = (getFiletime((row[4])))
+# 	Recieved_Bytes = (str(row[5]) + ' Bytes')
+# 	Total_Bytes = (str(row[6]) + ' Bytes')
+# 	State = (State(row[7]))
+# 	Danger_Type = (Danger_Type(row[8]))
+# 	Interrupt_Reason = (str(Interrupt_Reason((row[9]))))
+# 	URL = (row[15])
+# 	Site_lastmodified_Time = (row[23])
+# 	File_Type = str(row[24])
+
+
+f1.close()
+conn.close()

@@ -20,10 +20,9 @@ foreach {
         $pageFolder  = $site.GetFolder      
         $pageFolder.Items() |         
         foreach {          
-               $env:username + " : " + $env:userdomain + " : " + $env:COMPUTERNAME + " : " +   
-               $($env:hostIP) + ' : ' + $($env:hostMAC) + ' : ' + $( $pageFolder.GetDetailsOf($_,2)) + ' : ' +
-               $($site.Name)+ ' : '+ $($pageFolder.GetDetailsOf($_,0)).replace("file:///", "")  | out-file C:\Users\Public\Documents\${env:COMPUTERNAME}_$(get-date -f yyyyMMddhhmm)_IEhistory.txt -Append
-
+               $env:userdomain + " : " + $env:COMPUTERNAME + " : " + $($env:hostIP) + ' : ' +    
+               $($env:hostMAC) + ' : ' + $env:username + " : "  + $($pageFolder.GetDetailsOf($_,2)).replace(' ', " : ") + ' : ' +
+               $($site.Name).replace("내 PC", "") + ' : ' +$($pageFolder.GetDetailsOf($_,0)).replace("file:///", "") + ' : ' + $($pageFolder.GetDetailsOf($_,1))  | out-file C:\Users\Public\Documents\${env:COMPUTERNAME}_$(get-date -f yyyyMMddhhmm)_IEhistory.txt -Append
         }            
      }            
    }            
