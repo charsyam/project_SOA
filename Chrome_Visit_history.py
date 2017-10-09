@@ -72,7 +72,7 @@ def getMac() :
 
     return nics
 
-f1 = open('E:\chrome_url_info.txt', 'w+', encoding='utf8')
+# f1 = open('E:\chrome_url_info.txt', 'w+', encoding='utf8')
 f2 = open('E:\chrome_history_info.txt', 'w+', encoding='utf8')
 
 data_path = os.path.expanduser('~') + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
@@ -100,39 +100,40 @@ for nic in nics :
 	    MAC2 = MAC.replace(':', '-')
 #urls
 
-print('------------------------------------URL_INFOMATION-------------------------------------')
-for num,row in enumerate(rows):
-	print (socket.gethostname())
-	print ('URL list [' + str(num + 1) + ']' + '\n' + 'URL ' +  ': ' + str(row[1])
-		+ '\n'+'Details ' +  ': ' + str(row[2]) + '\n'+'Visit_Count ' +  ': ' + str(row[3])
-		+ '\n' + 'last_visit_time ' +  ': ' + getFiletime(row[5]).replace(" ", " : "))
+# print('------------------------------------URL_INFOMATION-------------------------------------')
+# for num,row in enumerate(rows):
+# 	print (socket.gethostname())
+# 	print ('URL list [' + str(num + 1) + ']' + '\n' + 'URL ' +  ': ' + str(row[1])
+# 		+ '\n'+'Details ' +  ': ' + str(row[2]) + '\n'+'Visit_Count ' +  ': ' + str(row[3])
+# 		+ '\n' + 'last_visit_time ' +  ': ' + getFiletime(row[5]).replace(" ", " : "))
 
-	host_name = socket.gethostname()
-	IP = str(get_IP())
-	user_name =  getpass.getuser()
-	url = (str(row[1]))
-	datails = (str(row[2]))
-	visit_count = (str(row[3]))
-	last_visit_time = (getFiletime(row[5]).replace(" ", " : "))
+# 	host_name = socket.gethostname()
+# 	IP = str(get_IP())
+# 	user_name =  getpass.getuser()
+# 	url = (str(row[1]))
+# 	datails = (str(row[2]))
+# 	visit_count = (str(row[3]))
+# 	last_visit_time = (getFiletime(row[5]).replace(" ", " : "))
 
-	f1.write("	")
-	f1.write(' : ')
-	f1.write(host_name)
-	f1.write(' : ')
-	f1.write(IP)
-	f1.write(' : ')
-	f1.write(MAC2)
-	f1.write(' : ')
-	f1.write(user_name)
-	f1.write(' : ')
-	f1.write(str((last_visit_time)))
-	f1.write(' : ')
-	f1.write(str((url)))
-	f1.write(' : ')
-	f1.write(str((datails)))
-	f1.write(' : ')
-	f1.write(str((visit_count)))
-	f1.write('\n')
+
+	# f1.write("	")
+	# f1.write(' : ')
+	# f1.write(host_name)
+	# f1.write(' : ')
+	# f1.write(user_name)
+	# f1.write(' : ')
+	# f1.write(MAC2)
+	# f1.write(' : ')
+	# f1.write(IP)
+	# f1.write(' : ')
+	# f1.write(str((last_visit_time)))
+	# f1.write(' : ')
+	# f1.write(str((url)))
+	# f1.write(' : ')
+	# f1.write(str((datails)))
+	# f1.write(' : ')
+	# f1.write(str((visit_count)))
+	# f1.write('\n')
 			
 	print ('-------------------------------------------------------------------------------------\n')
 print('\n')
@@ -153,19 +154,20 @@ for num,row in enumerate(rows2):
 	url = (print_url(row[0]))
 	datails = (str(url_details(row[0])))
 	visit_time = (getFiletime(row[1]).replace(" ", " : "))
+	last_visit_time = (Last_Visit_time(row[0]).replace(" ", " : "))
 	count = str(url_count(row[0]))
 
-	f2.write("	")
-	f2.write(' : ')
 	f2.write(host_name)
-	f2.write(' : ')
-	f2.write(IP)
-	f2.write(' : ')
-	f2.write(MAC2)
 	f2.write(' : ')
 	f2.write(user_name)
 	f2.write(' : ')
+	f2.write(MAC2)
+	f2.write(' : ')
+	f2.write(IP)
+	f2.write(' : ')
 	f2.write(str((visit_time)))
+	f2.write(' : ')
+	f2.write(last_visit_time)
 	f2.write(' : ')
 	f2.write(str((url)))
 	f2.write(' : ')
@@ -174,41 +176,8 @@ for num,row in enumerate(rows2):
 	f2.write(str((count)))
 	f2.write('\n')	
 
-#visits
-
-# #Save URL_INFO
-
-# for num, row in enumerate(rows3):
-# 	url_id = row[1]
-# 	url_info = row[0]
-
-# 	URL_INFO = [url_id, url_info]
-# 	#URL_INFO[0] == url_id
-# 	#URL_INFO[1] == url_info
-
-# for num, row in enumerate(rows2):
-# 	url_id2 = row[0]
-# 	visit_time = getFiletime(row[1])
-
-# 	VISIT_INFO = [url_id2, visit_time]
-# 	#VISIT_INFO[0] == url_id2
-# 	#VISIT_INFO[1] == visit_time
-
-# for row in rows3: #urls
-# 	for num in rows2: #visits
-# 		# print(URL_INFO[0])
-# 		# print(VISIT_INFO[0])
-
-# 		if(URL_INFO[0] == VISIT_INFO[0]):
-# 			print("success")
-# 			Visit = [URL_INFO[1], VISIT_INFO[1]]
-# 			print('test')
-# 			continue
-
-
-
 conn.close()
-f1.close()
+# f1.close()
 f2.close()
 
 
