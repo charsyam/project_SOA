@@ -192,9 +192,9 @@ for num,row in enumerate(rows):
 	# print ("	" + ' : ' + socket.gethostname() + ' : ' + getpass.getuser() + ' : ' + (MAC2) + ' : ' + str(get_IP()) + ' : ' + (row[1]) + ' : ' + (row[2])
 	#  + ' : ' + (row[3]) + ' : ' + getFiletime((row[4])) + ' : ' + str(row[5]) + ' : ' + str(row[6]) + ' : ' + State((row[7])) + ' : ' + Danger_Type(row[8])
 	#  + ' : ' + str(Interrupt_Reason((row[9]))) + ' : ' + (row[15]) + ' : ' + (row[23]) + ' : ' + str(row[24]))
-	f1.write(socket.gethostname() + ' : ' + getpass.getuser() + ' : ' + (MAC2) + ' : ' + str(get_IP()) + ' : ' + (row[1]) + ' : ' + (row[2])
-	 + ' : ' + (row[3]) + ' : ' + (getFiletime((row[4])).replace(" ", " : ")) + ' : ' + str(row[5]) + ' : ' + str(row[6]) + ' : ' + State((row[7])) + ' : ' + Danger_Type(row[8])
-	 + ' : ' + str(Interrupt_Reason((row[9]))) + ' : ' + (row[15]) + ' : ' + (row[23]) + ' : ' + str(row[24]))
+	f1.write(socket.gethostname() + ':::;' + getpass.getuser() + ':::;' + (MAC2) + ':::;' + str(get_IP()) + ':::;' + (row[1]) + ':::;' + (row[2])
+	 + ':::;' + (row[3]) + ':::;' + (getFiletime((row[4])).replace(" ", ":::;")) + ':::;' + str(row[5]) + ':::;' + str(row[6]) + ':::;' + State((row[7])) + ':::;' + Danger_Type(row[8])
+	 + ':::;' + str(Interrupt_Reason((row[9]))) + ':::;' + (row[15]) + ':::;' + str(row[24]))
 	f1.write('\n')
 
 		# 'Downloads list [' + str(num + 1) + ']' + '\n' + 'GUID ' +  ': ' + (row[1]) 
