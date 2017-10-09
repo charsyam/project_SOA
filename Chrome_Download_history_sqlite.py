@@ -168,8 +168,14 @@ def getMac() :
 
     return nics    
 
+time = datetime.datetime.now()
+curr_time = ("%s%s%s" % (time.year, time.month, time.day)) + '_' + time.strftime("%H%M%S")
+print(curr_time)
 
-f1 = open('E:\chrome_downloads_info.txt', 'w+', encoding='utf8')
+computer_N = socket.gethostname()
+print(computer_N)
+
+f1 = open("C:\\Users\\Public\\Documents\\" + computer_N + '_'+ curr_time + '_ChromeDownloads'+'.txt', 'w+', encoding='utf8')
 
 data_path = os.path.expanduser('~') + "\\AppData\\Local\\Google\\Chrome\\User Data\\Default"
 files = os.listdir(data_path)
