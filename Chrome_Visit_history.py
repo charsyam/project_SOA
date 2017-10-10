@@ -8,6 +8,7 @@ import socket
 import getpass
 from subprocess import check_output
 from xml.etree.ElementTree import fromstring
+from urllib.parse import urlparse
 
 def getFiletime(dtms):
 	if(dtms == 0):
@@ -75,10 +76,8 @@ def getMac() :
 # f1 = open('E:\chrome_url_info.txt', 'w+', encoding='utf8')
 time = datetime.datetime.now()
 curr_time = ("%s%s%s" % (time.year, time.month, time.day)) + '_' + time.strftime("%H%M%S")
-print(curr_time)
 
 computer_N = socket.gethostname()
-print(computer_N)
 
 f2 = open("C:\\Users\\Public\\Documents\\" + computer_N + '_'+ curr_time + '_ChromeHistory'+'.txt', 'w+', encoding='utf8')
 # f2 = open('E:\chrome_history_info.txt', 'w+', encoding='utf8')
@@ -106,6 +105,13 @@ for nic in nics :
 	for k, v in nic.items() :
 	    MAC = v
 	    MAC2 = MAC.replace(':', '-')
+
+script = "http://mail.naver.com/login"
+parse = urlparse(script)[1]
+print(parse)
+
+
+
 #urls
 
 # print('------------------------------------URL_INFOMATION-------------------------------------')
@@ -143,7 +149,7 @@ for nic in nics :
 	# f1.write(str((visit_count)))
 	# f1.write('\n')
 			
-	print ('-------------------------------------------------------------------------------------\n')
+print ('-------------------------------------------------------------------------------------\n')
 print('\n')
 print('\n')
 print('\n')
@@ -151,7 +157,7 @@ print ('------------------------------------------------------------------------
 print('-------------------------------------VISIT_HISTORY-------------------------------------')
 
 for num,row in enumerate(rows2):
-	print('Url_Id : ' + str(row[0]) + '\n' + 'URL: ' + print_url(row[0]) + '\n' + 'URL_Detail: ' + str(url_details(row[0])) 
+	print('Url_Id : ' + str(row[0]) + '\n' + 'URL: ' + print_url(row[0]) + '\n' + 'URI: ' + urlparse(print_url(row[0]))[1] + '\n' +'URL_Detail: ' + str(url_details(row[0])) 
 		+ '\n'+ 'Visit_Time : ' + getFiletime(row[1]).replace(" ", " : ") + '\n' + 'URL_Count: ' + str(url_count(row[0])))
 
 	print ('====================================================================================')
@@ -160,18 +166,21 @@ for num,row in enumerate(rows2):
 	IP = str(get_IP())
 	user_name =  getpass.getuser()
 	url = (print_url(row[0]))
+	uri = urlparse(url)[1]
 	datails = (str(url_details(row[0])))
 	visit_time = (getFiletime(row[1]).replace(" ", ":::;"))
 	last_visit_time = (Last_Visit_time(row[0]).replace(" ", ":::;"))
 	count = str(url_count(row[0]))
+	
+
 
 	f2.write(host_name)
 	f2.write(':::;')
 	f2.write(user_name)
 	f2.write(':::;')
-	f2.write(MAC2)
-	f2.write(':::;')
 	f2.write(IP)
+	f2.write(':::;')
+	f2.write(MAC2)
 	f2.write(':::;')
 	f2.write(str((visit_time)))
 	f2.write(':::;')
@@ -179,10 +188,13 @@ for num,row in enumerate(rows2):
 	f2.write(':::;')
 	f2.write(str((url)))
 	f2.write(':::;')
+	f2.write(str((uri)))
+	f2.write(':::;')
 	f2.write(str((datails)))
 	f2.write(':::;')
 	f2.write(str((count)))
 	f2.write('\n')	
+
 
 conn.close()
 # f1.close()
