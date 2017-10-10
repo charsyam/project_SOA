@@ -7,6 +7,7 @@ import datetime
 import socket
 import getpass
 from subprocess import check_output
+from urllib.parse import urlparse
 from xml.etree.ElementTree import fromstring
 
 def getFiletime(dtms):
@@ -170,10 +171,8 @@ def getMac() :
 
 time = datetime.datetime.now()
 curr_time = ("%s%s%s" % (time.year, time.month, time.day)) + '_' + time.strftime("%H%M%S")
-print(curr_time)
 
 computer_N = socket.gethostname()
-print(computer_N)
 
 f1 = open("C:\\Users\\Public\\Documents\\" + computer_N + '_'+ curr_time + '_ChromeDownloads'+'.txt', 'w+', encoding='utf8')
 
@@ -195,12 +194,15 @@ for nic in nics :
 
 rows = cur.fetchall()
 for num,row in enumerate(rows):
+
+	uri = urlparse(row[15])[1]
+
 	# print ("	" + ' : ' + socket.gethostname() + ' : ' + getpass.getuser() + ' : ' + (MAC2) + ' : ' + str(get_IP()) + ' : ' + (row[1]) + ' : ' + (row[2])
 	#  + ' : ' + (row[3]) + ' : ' + getFiletime((row[4])) + ' : ' + str(row[5]) + ' : ' + str(row[6]) + ' : ' + State((row[7])) + ' : ' + Danger_Type(row[8])
 	#  + ' : ' + str(Interrupt_Reason((row[9]))) + ' : ' + (row[15]) + ' : ' + (row[23]) + ' : ' + str(row[24]))
-	f1.write(socket.gethostname() + ':::;' + getpass.getuser() + ':::;' + (MAC2) + ':::;' + str(get_IP()) + ':::;' + (row[1]) + ':::;' + (row[2])
+	f1.write(socket.gethostname() + ':::;' + getpass.getuser() + ':::;' + str(get_IP()) + ':::;' + (MAC2) + ':::;' + (row[1]) + ':::;' + (row[2])
 	 + ':::;' + (row[3]) + ':::;' + (getFiletime((row[4])).replace(" ", ":::;")) + ':::;' + str(row[5]) + ':::;' + str(row[6]) + ':::;' + State((row[7])) + ':::;' + Danger_Type(row[8])
-	 + ':::;' + str(Interrupt_Reason((row[9]))) + ':::;' + (row[15]) + ':::;' + str(row[24]))
+	 + ':::;' + str(Interrupt_Reason((row[9]))) + ':::;' + (row[15]) + ':::;' + (uri) + ':::;' + str(row[24]))
 	f1.write('\n')
 
 		# 'Downloads list [' + str(num + 1) + ']' + '\n' + 'GUID ' +  ': ' + (row[1]) 
