@@ -18,29 +18,45 @@ def getFiletime(dtms):
 		days, seconds = divmod(seconds, 86400)
 		return str(datetime.datetime(1601, 1, 1) + (datetime.timedelta(days, seconds, micros, hours =+ 9)))
 
+# 왜 이름이 print_url 인가요? - print를 안하는데 말입니다.
+# 파라매터명이 int인건 좀 이상합니다. value 나 좀 더 다른 이름이 좋지 않을까요?
+# int 는 타입명과 헷갈려서
+# rows는 파라매터로 받는게 더 좋아보입니다.
 def print_url(int):
 	for num,row in enumerate(rows):
 		if(row[0] == int):
 			temp = row[1]
 			return temp
 
+# 파라매터명이 int인건 좀 이상합니다. value 나 좀 더 다른 이름이 좋지 않을까요?
+# int 는 타입명과 헷갈려서
+# rows는 파라매터로 받는게 더 좋아보입니다.
 def url_details(int):
 	for num,row in enumerate(rows):
 		if(row[0] == int):
 			temp = row[2]
 			return temp
 
+# 파라매터명이 int인건 좀 이상합니다. value 나 좀 더 다른 이름이 좋지 않을까요?
+# int 는 타입명과 헷갈려서
+# rows는 파라매터로 받는게 더 좋아보입니다.
 def url_count(int):
 	for num,row in enumerate(rows):
 		if(row[0] == int):
 			temp = row[3]
 			return temp
 
+# 파라매터명이 int인건 좀 이상합니다. value 나 좀 더 다른 이름이 좋지 않을까요?
+# int 는 타입명과 헷갈려서
+# rows는 파라매터로 받는게 더 좋아보입니다.
 def Last_Visit_time(int):
 	for num,row in enumerate(rows):
 		if(row[0] == int):
 			temp = row[5]
 			return str(getFiletime(temp))	
+
+# 위의 함수들이 거의 비슷한 코드인데 리팩토링 가능할듯 한데요?
+# 어떻게 하면 좋을까요?
 
 def get_IP():
 	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -88,6 +104,7 @@ history_db = os.path.join(data_path, 'history')
 #conn = sql.connect(r"C:\Users\gayou\AppData\Local\Google\Chrome\User Data\Default\History")
 conn = sql.connect(history_db)
 
+# 왜 cursor를 세 개나 쓰나요?
 cur = conn.cursor()
 cur2 = conn.cursor()
 cur3 = conn.cursor()
